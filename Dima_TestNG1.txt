@@ -1,0 +1,266 @@
+POSITIVE FILE
+
+package schop.com;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+public class PositiveTest {
+@Test
+	public  void login () {
+		System.setProperty("webdriver.chrome.driver","C:\\chromedriver.exe");
+		WebDriver driver=new ChromeDriver();
+		driver.manage().window().maximize();
+		String url=("https://opensource-demo.orangehrmlive.com/"
+				+ "");
+		driver.get(url);
+		System.out.println(driver.getTitle());
+		
+		//Username
+		WebElement	userName=driver.findElement(By.xpath("//input[@id='txtUsername']"));
+		userName.sendKeys("Admin");
+		
+		//PASSWORD
+		WebElement	userPassword =driver.findElement(By.xpath("//input[@id='txtPassword']"));
+		userPassword.sendKeys("admin123");
+		
+		//LOG IN
+		WebElement	button =driver.findElement(By.xpath("//input[@id='btnLogin']"));
+		button.click();
+	
+	
+		//newurl
+		String expURL_1="https://opensource-demo.orangehrmlive.com/index.php/dashboard";
+		String actUrl = driver.getCurrentUrl();
+		Assert.assertEquals(actUrl, expURL_1, "Actual page url is not the same as expected"); 
+		
+		
+		// Check if logo is visible
+		WebElement logo = driver.findElement(By.xpath("//div[@id='branding']//a//img"));
+		Assert.assertTrue(logo.isDisplayed(),"Log img is not dislayed");
+		
+		//succesful msg
+		WebElement successMsg = driver.findElement(By.xpath("//a[@id='welcome']"));
+		String expMsg = "Welcome Admin";
+		String actualMsg =successMsg.getText();
+		Assert.assertEquals(actualMsg, expMsg, "Acrual msg is not the same as expected");
+		
+
+	}
+
+}
+
+________________________________________________________________________________________________________________
+
+NEGATIVE FILE:
+
+package schop.com;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+public class NegativeTest {
+@Test(priority =1, groups = {"negativeTests","smokeTests"})
+	public  void incorectUsernameTest () {
+		System.setProperty("webdriver.gecko.driver","C:\\geckodriver.exe");
+		WebDriver driver=new FirefoxDriver();
+		driver.manage().window().maximize();
+		String url=("https://opensource-demo.orangehrmlive.com/"
+				+ "");
+		driver.get(url);
+		System.out.println(driver.getTitle());
+		
+		//Username
+		WebElement	userName=driver.findElement(By.xpath("//input[@id='txtUsername']"));
+		userName.sendKeys("incorectUsername");
+		
+		//PASSWORD
+		WebElement	userPassword =driver.findElement(By.xpath("//input[@id='txtPassword']"));
+		userPassword.sendKeys("admin123");
+		
+		//LOG IN
+		WebElement	button =driver.findElement(By.xpath("//input[@id='btnLogin']"));
+		button.click();
+	
+	
+
+		
+		//succesful msg
+		WebElement errorMsg = driver.findElement(By.xpath("//span[@id='spanMessage']"));
+		String expMsg = "Invalid credentials";
+		String actualMsg =errorMsg.getText();
+		Assert.assertEquals(actualMsg, expMsg, "Acrual msg is not the same as expected");
+		
+		driver.quit();
+
+	}
+
+@Test(priority =2, groups = {"negativeTests"})
+public  void incorectPasswordTest () {
+System.out.println("incorectPasswordTest ");
+	System.setProperty("webdriver.chrome.driver","C:\\chromedriver.exe");
+	WebDriver driver=new ChromeDriver();
+	driver.manage().window().maximize();
+	String url=("https://opensource-demo.orangehrmlive.com/"
+			+ "");
+	driver.get(url);
+	System.out.println(driver.getTitle());
+	
+	//Username
+	WebElement	userName=driver.findElement(By.xpath("//input[@id='txtUsername']"));
+	userName.sendKeys("Admin");
+	
+	//PASSWORD
+	WebElement	userPassword =driver.findElement(By.xpath("//input[@id='txtPassword']"));
+	userPassword.sendKeys("incorectPassword");
+	
+	//LOG IN
+	WebElement	button =driver.findElement(By.xpath("//input[@id='btnLogin']"));
+	button.click();
+
+
+
+	
+	//succesful msg
+	WebElement errorMsg = driver.findElement(By.xpath("//span[@id='spanMessage']"));
+	String expMsg = "Invalid credentials";
+	String actualMsg =errorMsg.getText();
+	Assert.assertEquals(actualMsg, expMsg, "Acrual msg is not the same as expected");
+	
+	driver.quit();
+
+}
+
+
+}
+___________________________________________________________________________________________________________
+SUITE ALL:
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+  
+<suite name="Alltests" verbose="1" >
+  <test name="Positive" >
+    <classes>
+       <class name="schop.com.PositiveTest" />
+    </classes>
+  </test>
+ 
+  <test name="Negative">
+    <classes>
+      <class name="schop.com.NegativeTest"/>
+  
+    </classes>
+  </test>
+</suite>
+______________________________________________________________________________________________________________________
+SUITE NEGATIVE:
+
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+  
+<suite name="Negative" verbose="1" >
+ 
+ 
+  <test name="Negative">
+  
+<!--   <groups>
+  <run>
+  <include name="smokeTests"></include>
+  </run>
+  </groups> -->
+  
+    <classes>
+      <class name="schop.com.NegativeTest">
+      
+      <methods>
+      <include name="incorectPasswordTest"/>
+      </methods>
+      </class>
+  
+    </classes>
+  </test>
+</suite>
+
+__________________________________________________________________________________________________________________________________________
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>Excell</groupId>
+  <artifactId>com.doc1</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>Vlad</name>
+<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.14.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>3.14.0</version>
+		</dependency>
+
+		<!-- https://logging.apache.org/log4j/2.x/maven-artifacts.html -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.11.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.11.1</version>
+		</dependency>
+
+
+	</dependencies>
+
+
+	<build>
+
+		<plugins>
+			<!-- https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-source-and-target.html -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.0</version>
+				<configuration>
+					<source>11</source>
+					<target>11</target>
+				</configuration>
+			</plugin>
+
+			<!-- https://maven.apache.org/surefire/maven-surefire-plugin/examples/testng.html -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.0</version>
+				<configuration>
+					<suiteXmlFiles>
+						<suiteXmlFile>src/test/resources/TestSuites/testng.xml</suiteXmlFile>
+					</suiteXmlFiles>
+				</configuration>
+			</plugin>
+
+		</plugins>
+
+	</build>
+
+
+
+
+
+
+</project>
+
